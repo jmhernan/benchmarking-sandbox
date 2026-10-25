@@ -2,7 +2,7 @@
 
 Research toward a rigorous performance-benchmarking suite for a software engineering team (currently working in Dart). The goal is to tell, with quantified uncertainty, whether a code change made things faster or slower, by how much, and how sure we are.
 
-**Status: research phase.** There is no plan, no chosen implementation language and no production code yet. `src/` is empty on purpose. A `plan.md` comes after the research is reviewed.
+**Status: research phase, moving to implementation.** `src/` is empty on purpose until Part A starts. The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
 
 ## Background
 
@@ -12,6 +12,7 @@ The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable 
 
 | Path | Contents |
 |---|---|
+| `docs/plan.md` | **Local only (git-ignored).** Implementation plan, pinned to bench_press `5fd6396`. Part A: close the statistical gaps (what landed upstream, plus git-ref rebuilds, diagnostics, design, multiplicity, validation). Part B: Bayesian additions. Both have acceptance criteria fixed before running. |
 | [docs/research.md](docs/research.md) | **Start here.** Current state of the research: problem, core concepts, source-quality notes, open questions, analysis of the sample data, and the synthetic-data method. |
 | [docs/rigorous-benchmarking-in-reasonable-time.md](docs/rigorous-benchmarking-in-reasonable-time.md) | Summary of the original methodology. |
 | [docs/literature-review-benchmarking.md](docs/literature-review-benchmarking.md) | Literature review of newer work. |
@@ -20,6 +21,7 @@ The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable 
 | [sandbox/analyze.py](sandbox/analyze.py) | Exploratory analysis of the sample data: warmup detection, changepoints, slow episodes, spike fractions, block bootstrap. |
 | [sandbox/synth.py](sandbox/synth.py) | Synthetic data generator with known ground truth, for validating detectors and estimators. |
 | `sandbox/output/` | Tables (CSV), plots (PNG) and `results.txt` from `analyze.py`. |
+| [sandbox/spikes/](sandbox/spikes) | Throwaway feasibility checks (e.g. the Bayesian grid estimator spike cited in the local plan, `docs/plan.md` §B.2a). |
 | `src/` | Reserved for the eventual implementation. Empty. |
 
 ## What the research has found so far
@@ -37,7 +39,7 @@ These are exploratory results on one series per file, not validated conclusions.
 
 The main ones, all listed in [docs/research.md](docs/research.md) §7:
 - What is the unit of the sample data, what is being timed, and which Dart runtime mode (JIT, AOT or JS) produced it?
-- Can replicate runs (several processes per code version) be collected, so between-process variance can be estimated?
+- How large is between-process variance on Dart AOT? Replicate runs can now be collected with `bench_press run --processes`, but none have been run yet.
 - What practical threshold counts as a meaningful change for the team?
 - Which estimators should be the default (Fieller, hierarchical bootstrap, Bayesian), and in which language should the suite be written?
 
