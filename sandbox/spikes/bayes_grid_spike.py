@@ -2,7 +2,7 @@
 
 A/A (theta = 1), sigma1 = sigma2 = 1%, n = 15, 500 reps per row.
 Run: python sandbox/spikes/bayes_grid_spike.py   (perfBench env; ~1-2 min)
-Superseded by sandbox/stats/bayes_grid.py once M2 is built.
+Superseded by src/bench_stats/bayes/grid.py once milestone B1 is built.
 """
 import numpy as np
 from scipy import stats
