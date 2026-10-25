@@ -1,0 +1,12 @@
+name: bench_sandbox
+description: Controlled Dart benchmarks for validating the bench_stats statistics layer.
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+dev_dependencies:
+  # Local clone of kevmoo/bench_press, checked out next to this repository.
+  # The plan pins commit 5fd6396 (v0.4.2).
+  bench_press:
+    path: ../../bench_press

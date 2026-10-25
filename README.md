@@ -2,7 +2,7 @@
 
 Research toward a rigorous performance-benchmarking suite for a software engineering team (currently working in Dart). The goal is to tell, with quantified uncertainty, whether a code change made things faster or slower, by how much, and how sure we are.
 
-**Status: research phase, moving to implementation.** `src/` is empty on purpose until Part A starts. The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
+**Status: implementation started (Part A, step A0 done).** The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
 
 ## Background
 
@@ -22,7 +22,9 @@ The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable 
 | [sandbox/synth.py](sandbox/synth.py) | Synthetic data generator with known ground truth, for validating detectors and estimators. |
 | `sandbox/output/` | Tables (CSV), plots (PNG) and `results.txt` from `analyze.py`. |
 | [sandbox/spikes/](sandbox/spikes) | Throwaway feasibility checks (e.g. the Bayesian grid estimator spike cited in the local plan, `docs/plan.md` §B.2a). |
-| `src/` | Reserved for the eventual implementation. Empty. |
+| [pyproject.toml](pyproject.toml), [src/bench_stats/](src/bench_stats), [tests/](tests) | The `bench_stats` Python package (the statistical layer) and its pytest suite. Scaffolding only so far. Install with `pip install -e ".[dev]"` (into the `perfBench` conda environment), run tests with `python -m pytest`. |
+| [bench/](bench) | Controlled Dart benchmarks (a fixed workload with an injectable, calibrated spin cost, plus a same-binary group) for pilots and real-hardware validation. Needs a bench_press clone next to this repository; see [bench/README.md](bench/README.md). |
+| `data/runs/` | Raw bench_press run JSON. Git-ignored. |
 
 ## What the research has found so far
 
@@ -39,7 +41,7 @@ These are exploratory results on one series per file, not validated conclusions.
 
 The main ones, all listed in [docs/research.md](docs/research.md) §7:
 - What is the unit of the sample data, what is being timed, and which Dart runtime mode (JIT, AOT or JS) produced it?
-- How large is between-process variance on Dart AOT? Replicate runs can now be collected with `bench_press run --processes`, but none have been run yet.
+- How large is between-process variance on Dart AOT? A first A/A pilot (one benchmark, 40 processes, this Mac) puts it at about 0.8–1.3% per process, comparable to within-process noise, with part of it being drift over the session ([sandbox/output/a0c_pilot.txt](sandbox/output/a0c_pilot.txt)). More benchmarks and machines are needed.
 - What practical threshold counts as a meaningful change for the team?
 - Which estimators should be the default (Fieller, hierarchical bootstrap, Bayesian), and in which language should the suite be written?
 

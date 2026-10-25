@@ -3,3 +3,14 @@ docs/plan.md
 
 # macOS
 .DS_Store
+
+# Raw benchmark run data (plan §0)
+data/runs/
+
+# Python
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Dart
+.dart_tool/
