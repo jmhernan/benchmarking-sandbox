@@ -239,14 +239,16 @@ def recommend_design(
     power: float = 0.8,
     max_trials: int = 200,
     min_processes: int = RECOMMENDED_PROCESSES,
-    conservative: bool = True,
+    conservative: bool = False,
 ) -> DesignHint | None:
     """Trials per process (n*, rounded up to a multiple of 4) and processes per version to detect a speedup θ (default 1 + 2δ) as
     "faster ≥ δ" with the given power, from one record's costs and its variance components.
 
-    With few processes the σ₂ estimate is noisy and can land near 0, which would recommend very
-    few, very long processes. So by default the upper end of σ₂'s interval is used, and at least
-    `min_processes` processes are recommended (fewer leave intervals and outlier checks fragile).
+    Uses the σ₂ estimate and recommends at least `min_processes` processes (fewer leave intervals
+    and outlier checks fragile, and a σ₂ estimate near 0 would otherwise suggest very few, very long
+    processes). In A4 this reached 87–100% power for an 80% target at 1.15–1.27× the machine time of
+    the bare formula. `conservative=True` uses the upper end of σ₂'s interval instead: 95–100% power
+    at 1.3–1.5× the time.
     """
     c1, c2 = record.trial_seconds(), record.process_overhead_seconds()
     if c1 is None or c2 is None:

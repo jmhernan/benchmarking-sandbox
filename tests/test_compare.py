@@ -100,6 +100,7 @@ def test_recommend_design_when_sigma2_is_zero():
     hint = recommend_design(rec, vc, delta=0.03, max_trials=200, conservative=False)
     assert hint.trials_per_process == 200
     assert hint.processes_per_version == 5  # floor: never fewer than 5
-    conservative = recommend_design(rec, vc, delta=0.03)
+    assert recommend_design(rec, vc, delta=0.03).sigma2_used == 0.0
+    conservative = recommend_design(rec, vc, delta=0.03, conservative=True)
     assert conservative.sigma2_used == vc.sigma2_ci[1] > 0
     assert conservative.trials_per_process < 200
