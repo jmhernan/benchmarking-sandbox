@@ -16,6 +16,7 @@ The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable 
 | [docs/research.md](docs/research.md) | **Start here.** Current state of the research: problem, core concepts, source-quality notes, open questions, analysis of the sample data, and the synthetic-data method. |
 | [docs/rigorous-benchmarking-in-reasonable-time.md](docs/rigorous-benchmarking-in-reasonable-time.md) | Summary of the original methodology. |
 | [docs/literature-review-benchmarking.md](docs/literature-review-benchmarking.md) | Literature review of newer work. |
+| [docs/bayesian-literature.md](docs/bayesian-literature.md) | Verified sources for the Bayesian additions (Part B), grouped by question and mapped to milestones, with notes on what the A0c pilot changes. |
 | [docs/bench_press/](docs/bench_press) | Standalone statistical proposal for [kevmoo/bench_press](https://github.com/kevmoo/bench_press) (process-level intervals, threshold gate, validation, experiment design) and the reproducible simulation behind it (`simulate.py`). |
 | `data/` | Sample per-iteration timing series (`data_10.txt` … `data_10000.txt`; one integer per line, **unit assumed to be microseconds**, unconfirmed). **Not in version control** (`data/.gitignore` excludes `*.txt` and `*.csv`), so a fresh clone needs the files supplied separately. |
 | [sandbox/analyze.py](sandbox/analyze.py) | Exploratory analysis of the sample data: warmup detection, changepoints, slow episodes, spike fractions, block bootstrap. |
