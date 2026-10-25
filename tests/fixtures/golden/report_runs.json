@@ -594,13 +594,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 4,
-        "processes_per_version": 6,
-        "power": 0.8591961368205213,
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 0.9892574295608096,
         "detect": 0.06,
         "c1_seconds": 0.10007628087290105,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.013388612983470678
+        "sigma2_used": 0.008103944837754411
       }
     },
     {
@@ -643,13 +643,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 4,
-        "processes_per_version": 6,
-        "power": 0.8854334183201081,
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 0.9951625700456889,
         "detect": 0.06,
         "c1_seconds": 0.1002224300377663,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.01265424449797651
+        "sigma2_used": 0.007372963230243635
       }
     },
     {
@@ -692,13 +692,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 12,
+        "trials_per_process": 24,
         "processes_per_version": 5,
-        "power": 0.999995381021386,
+        "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.09976890215413678,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.004827283390442091
+        "sigma2_used": 0.002027065465270275
       }
     },
     {
@@ -741,13 +741,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 8,
+        "trials_per_process": 16,
         "processes_per_version": 5,
         "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.100045012376495,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.0024576253345770147
+        "sigma2_used": 0.0012898801506622101
       }
     },
     {
@@ -791,12 +791,12 @@
       },
       "design": {
         "trials_per_process": 4,
-        "processes_per_version": 54,
-        "power": 0.8056077275704006,
+        "processes_per_version": 23,
+        "power": 0.8153932192005667,
         "detect": 0.06,
         "c1_seconds": 0.10253754264164809,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.05190811318780311
+        "sigma2_used": 0.032559509034607255
       }
     },
     {
@@ -849,13 +849,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 8,
+        "trials_per_process": 12,
         "processes_per_version": 5,
-        "power": 0.9955164625778129,
+        "power": 0.9999999742219962,
         "detect": 0.06,
         "c1_seconds": 0.10003091287697184,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.007425402501038023
+        "sigma2_used": 0.004099841033119212
       }
     },
     {
@@ -899,12 +899,12 @@
       },
       "design": {
         "trials_per_process": 4,
-        "processes_per_version": 6,
-        "power": 0.8845103074679577,
+        "processes_per_version": 5,
+        "power": 0.9840123209651556,
         "detect": 0.06,
         "c1_seconds": 0.10122526567114178,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.013052910295624711
+        "sigma2_used": 0.008216491412877908
       }
     },
     {
@@ -947,13 +947,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 12,
+        "trials_per_process": 200,
         "processes_per_version": 5,
-        "power": 0.999999993739887,
+        "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.09997597063803784,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.0037224170123957416
+        "sigma2_used": 0.0
       }
     },
     {
@@ -996,13 +996,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 12,
+        "trials_per_process": 200,
         "processes_per_version": 5,
-        "power": 0.9998067001699033,
+        "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.10015563699196273,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.005271330275557199
+        "sigma2_used": 0.00012629924928077803
       }
     },
     {
@@ -1045,13 +1045,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 8,
+        "trials_per_process": 12,
         "processes_per_version": 5,
-        "power": 0.8890209725539845,
+        "power": 0.9991550420863309,
         "detect": 0.06,
         "c1_seconds": 0.09138312850401811,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.010735709234567835
+        "sigma2_used": 0.006007061377096676
       }
     },
     {
@@ -1094,13 +1094,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 8,
+        "trials_per_process": 12,
         "processes_per_version": 5,
-        "power": 0.9576601010047013,
+        "power": 0.999965561861747,
         "detect": 0.06,
         "c1_seconds": 0.10756701085427302,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.008933226631759031
+        "sigma2_used": 0.004742923999800418
       }
     },
     {
@@ -1143,13 +1143,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 8,
+        "trials_per_process": 12,
         "processes_per_version": 5,
         "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.09846333913722885,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.0020404038511654056
+        "sigma2_used": 0.0011391242561340305
       }
     },
     {
@@ -1193,12 +1193,12 @@
       },
       "design": {
         "trials_per_process": 4,
-        "processes_per_version": 58,
-        "power": 0.8039241565843228,
+        "processes_per_version": 24,
+        "power": 0.8004994354773054,
         "detect": 0.06,
         "c1_seconds": 0.10214524338062395,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.0540597479590947
+        "sigma2_used": 0.03411483853165984
       }
     },
     {
@@ -1251,13 +1251,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 4,
+        "trials_per_process": 8,
         "processes_per_version": 5,
-        "power": 0.9549494435722607,
+        "power": 0.9999592982045942,
         "detect": 0.06,
         "c1_seconds": 0.09950911458512385,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.009180234472476697
+        "sigma2_used": 0.005322935473425017
       }
     },
     {
@@ -1301,12 +1301,12 @@
       },
       "design": {
         "trials_per_process": 4,
-        "processes_per_version": 10,
-        "power": 0.8146267248261175,
+        "processes_per_version": 6,
+        "power": 0.8763211123648859,
         "detect": 0.06,
         "c1_seconds": 0.10136448138279032,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.020264380008693295
+        "sigma2_used": 0.012907719812314249
       }
     },
     {
@@ -1349,13 +1349,13 @@
         "outlier_processes": []
       },
       "design": {
-        "trials_per_process": 16,
+        "trials_per_process": 200,
         "processes_per_version": 5,
-        "power": 0.9999999212297014,
+        "power": 1.0,
         "detect": 0.06,
         "c1_seconds": 0.1000631124092386,
         "c2_seconds_min": 2.0,
-        "sigma2_used": 0.004109264370276192
+        "sigma2_used": 0.0
       }
     }
   ]

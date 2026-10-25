@@ -1,0 +1,17 @@
+{
+  "bench_stats_version": "0.0.1",
+  "seed": 20261025,
+  "scale": 1.0,
+  "experiments": [
+    "grid",
+    "robust",
+    "group",
+    "suite",
+    "design",
+    "power",
+    "ci",
+    "outlier"
+  ],
+  "tasks": 670,
+  "seconds": 61.0
+}

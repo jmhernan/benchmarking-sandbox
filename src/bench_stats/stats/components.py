@@ -198,7 +198,7 @@ def variance_components(
     """Estimate sigma1, sigma2 and k from per-process trial times (any positive unit).
 
     Intervals come from a parametric bootstrap of the fitted model (AR(1) within processes, normal
-    process effects, the same trial counts) with percentile limits. They are approximate,
+    process effects, the same trial counts) with percentile limits; `n_boot=0` skips them (NaN). They are approximate,
     especially for sigma2 near 0 and for few processes; A4 measures their coverage.
     """
     raw = [np.asarray(t, float) for t in process_trials if len(t) > 0]
@@ -213,19 +213,24 @@ def variance_components(
     iid = _estimate(Y, mask, n, autocorrelation=False)
     s1, s2, rho = float(est["s1"]), float(est["s2"]), float(est["rho"])
 
-    rng = np.random.default_rng(seed)
-    n_max = Y.shape[1]
-    e = np.empty((n_boot, P, n_max))
-    e[..., 0] = rng.standard_normal((n_boot, P))
-    innov = math.sqrt(1.0 - rho**2)
-    for j in range(1, n_max):
-        e[..., j] = rho * e[..., j - 1] + innov * rng.standard_normal((n_boot, P))
-    Yb = s2 * rng.standard_normal((n_boot, P, 1)) + s1 * e
-    boot = _estimate(Yb, mask, n, autocorrelation)
     lo, hi = 100 * (1 - conf) / 2, 100 * (1 + conf) / 2
+    if n_boot > 0:
+        rng = np.random.default_rng(seed)
+        n_max = Y.shape[1]
+        e = np.empty((n_boot, P, n_max))
+        e[..., 0] = rng.standard_normal((n_boot, P))
+        innov = math.sqrt(1.0 - rho**2)
+        for j in range(1, n_max):
+            e[..., j] = rho * e[..., j - 1] + innov * rng.standard_normal((n_boot, P))
+        Yb = s2 * rng.standard_normal((n_boot, P, 1)) + s1 * e
+        boot = _estimate(Yb, mask, n, autocorrelation)
+    else:
+        boot = {"s1": np.array([]), "s2": np.array([]), "k": np.array([])}
 
     def ci(x: np.ndarray) -> tuple[float, float]:
         x = x[np.isfinite(x)]
+        if x.size == 0:
+            return (math.nan, math.nan)
         return (float(np.percentile(x, lo)), float(np.percentile(x, hi)))
 
     m = est["m"]

@@ -363,8 +363,7 @@ def _design_md(report: dict[str, Any], out: list[str]) -> None:
         f"Trials per process (n*, the cost-optimal split, rounded up to a multiple of 4 for bench_press's "
         f"`ABBA BAAB` visits) and processes per version needed to report a "
         f"{detect} speedup as \"faster ≥ {100 * s['threshold']:g}%\" with {100 * s['power']:g}% power. "
-        "Computed from each benchmark's own costs and variance components, using the upper end of σ₂'s "
-        "interval and at least 5 processes"
+        "Computed from each benchmark's own costs and variance components, with at least 5 processes"
         + (", from whichever run needs more processes." if side else "."),
         "",
         "| Benchmark |" + (" From run |" if side else "") + " Trials per process | Processes per version | Power | σ₂ used | Trial cost c₁ | Process overhead c₂ |",

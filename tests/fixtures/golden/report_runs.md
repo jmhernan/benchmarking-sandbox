@@ -59,19 +59,19 @@ Rows with — had a single process (or one trial per process): no between-proces
 
 ## Design hint
 
-Trials per process (n*, the cost-optimal split, rounded up to a multiple of 4 for bench_press's `ABBA BAAB` visits) and processes per version needed to report a +6% speedup as "faster ≥ 3%" with 80% power. Computed from each benchmark's own costs and variance components, using the upper end of σ₂'s interval and at least 5 processes, from whichever run needs more processes.
+Trials per process (n*, the cost-optimal split, rounded up to a multiple of 4 for bench_press's `ABBA BAAB` visits) and processes per version needed to report a +6% speedup as "faster ≥ 3%" with 80% power. Computed from each benchmark's own costs and variance components, with at least 5 processes, from whichever run needs more processes.
 
 | Benchmark | From run | Trials per process | Processes per version | Power | σ₂ used | Trial cost c₁ | Process overhead c₂ |
 | :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `same:aot` | baseline | 4 | 6 | 86% | 1.34% | 0.100 s | ≥ 2.00 s |
-| `faster:aot` | baseline | 4 | 6 | 89% | 1.27% | 0.100 s | ≥ 2.00 s |
-| `slower:aot` | baseline | 12 | 5 | 100% | 0.48% | 0.100 s | ≥ 2.00 s |
-| `small:aot` | baseline | 8 | 5 | 100% | 0.25% | 0.100 s | ≥ 2.00 s |
-| `noisy:aot` | candidate | 4 | 58 | 80% | 5.41% | 0.102 s | ≥ 2.00 s |
-| `unstable:aot` | baseline | 8 | 5 | 100% | 0.74% | 0.100 s | ≥ 2.00 s |
-| `drifting:aot` | candidate | 4 | 10 | 81% | 2.03% | 0.101 s | ≥ 2.00 s |
-| `retired:aot` | baseline | 12 | 5 | 100% | 0.37% | 0.100 s | ≥ 2.00 s |
-| `new:aot` | candidate | 16 | 5 | 100% | 0.41% | 0.100 s | ≥ 2.00 s |
+| `same:aot` | baseline | 8 | 5 | 99% | 0.81% | 0.100 s | ≥ 2.00 s |
+| `faster:aot` | baseline | 8 | 5 | 100% | 0.74% | 0.100 s | ≥ 2.00 s |
+| `slower:aot` | baseline | 24 | 5 | 100% | 0.20% | 0.100 s | ≥ 2.00 s |
+| `small:aot` | baseline | 16 | 5 | 100% | 0.13% | 0.100 s | ≥ 2.00 s |
+| `noisy:aot` | candidate | 4 | 24 | 80% | 3.41% | 0.102 s | ≥ 2.00 s |
+| `unstable:aot` | baseline | 12 | 5 | 100% | 0.41% | 0.100 s | ≥ 2.00 s |
+| `drifting:aot` | candidate | 4 | 6 | 88% | 1.29% | 0.101 s | ≥ 2.00 s |
+| `retired:aot` | baseline | 200 | 5 | 100% | 0.00% | 0.100 s | ≥ 2.00 s |
+| `new:aot` | candidate | 200 | 5 | 100% | 0.00% | 0.100 s | ≥ 2.00 s |
 
 c₂ is bench_press's warmup and calibration time per process; process startup is not recorded, so it is a lower bound and the suggested n* may be slightly low.
 
