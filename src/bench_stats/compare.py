@@ -7,6 +7,7 @@ variance components of each side and warnings.
 """
 
 import math
+import zlib
 from collections import defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass, replace
@@ -23,8 +24,6 @@ from .stats.paired import paired_log_ratio
 from .stats.welch_log import welch_log
 
 RECOMMENDED_PROCESSES = 5
-LARGE_K = 2.0
-
 
 @dataclass(frozen=True)
 class Comparison:
@@ -50,10 +49,15 @@ class Comparison:
         return self.candidate.name
 
 
-def _components(record: BenchmarkRecord, seed: int) -> VarianceComponents | None:
+def components_for(record: BenchmarkRecord, seed: int = 0) -> VarianceComponents | None:
+    """Variance components of one record, or None with fewer than 2 processes or no repeated trials.
+
+    The bootstrap seed is derived from the record's key, so a record gets the same intervals
+    wherever it appears (e.g. a group baseline compared with several variants).
+    """
     if record.processes < 2 or max(len(t) for t in record.process_trials) < 2:
         return None
-    return variance_components(record.process_trials, seed=seed)
+    return variance_components(record.process_trials, seed=seed + zlib.crc32(record.key.encode()))
 
 
 def _side_warnings(label: str, record: BenchmarkRecord, vc: VarianceComponents | None) -> list[str]:
@@ -62,7 +66,7 @@ def _side_warnings(label: str, record: BenchmarkRecord, vc: VarianceComponents |
     if P == 1:
         out.append(
             f"{label}: 1 process, so no process-level interval. bench_press's interval uses that "
-            "process's trials and is too narrow when processes differ (see k)."
+            "process's trials and is too narrow whenever processes differ. Rerun with --processes 5 or more."
         )
     elif P < RECOMMENDED_PROCESSES:
         out.append(f"{label}: only {P} processes ({RECOMMENDED_PROCESSES}+ recommended).")
@@ -73,14 +77,12 @@ def _side_warnings(label: str, record: BenchmarkRecord, vc: VarianceComponents |
         )
     if vc is not None:
         if vc.outlier_processes:
-            out.append(f"{label}: outlier process(es) {list(vc.outlier_processes)} (robust z > 3.5), kept.")
+            out.append(f"{label}: outlier process(es) {list(vc.outlier_processes)} (generalized ESD test, α = 1%), kept.")
         if vc.drift_detected:
             out.append(
                 f"{label}: process means drift with launch order (Spearman {vc.launch_spearman:+.2f}, "
                 f"p = {vc.launch_spearman_p:.2g}); keep versions interleaved."
             )
-        if vc.k > LARGE_K:
-            out.append(f"{label}: k = {vc.k:.1f}, so a single-process interval would be {vc.k:.1f}x too narrow.")
     return out
 
 
@@ -107,7 +109,7 @@ def compare(
     today = today_verdict(*bp_args, 0.0, **bp_kwargs)
     today_threshold = today_verdict(*bp_args, delta, **bp_kwargs)
 
-    vc_b, vc_c = _components(baseline, seed), _components(candidate, seed + 1)
+    vc_b, vc_c = components_for(baseline, seed), components_for(candidate, seed)
     warnings = _side_warnings("baseline", baseline, vc_b) + _side_warnings("candidate", candidate, vc_c)
     if a.size >= 2 and b.size >= 2 and not interval.bounded:
         warnings.append("Fieller interval is unbounded (g ≥ 1): too few or too noisy processes.")
@@ -168,7 +170,7 @@ def compare_runs(
     """Compare matching benchmarks of two runs (separate process launches, so unpaired)."""
     base, cand = baseline.by_key(), candidate.by_key()
     keys = [k for k in cand if k in base]
-    comparisons = [compare(base[k], cand[k], delta, conf, reduce, False, seed + 2 * i) for i, k in enumerate(keys)]
+    comparisons = [compare(base[k], cand[k], delta, conf, reduce, False, seed) for k in keys]
     return SuiteComparison(
         comparisons=tuple(_with_fdr(comparisons, q)),
         only_baseline=tuple(k for k in base if k not in cand),
@@ -208,7 +210,7 @@ def compare_groups(
             if r is base:
                 continue
             paired = base.processes == r.processes > 1
-            comparisons.append(compare(base, r, delta, conf, reduce, paired, seed + 2 * len(comparisons)))
+            comparisons.append(compare(base, r, delta, conf, reduce, paired, seed))
     return SuiteComparison(
         comparisons=tuple(_with_fdr(comparisons, q)),
         only_baseline=(),
@@ -226,6 +228,7 @@ class DesignHint:
     theta: float
     c1: float
     c2: float
+    sigma2_used: float
 
 
 def recommend_design(
@@ -235,15 +238,29 @@ def recommend_design(
     theta: float | None = None,
     power: float = 0.8,
     max_trials: int = 200,
+    min_processes: int = RECOMMENDED_PROCESSES,
+    conservative: bool = True,
 ) -> DesignHint | None:
-    """Trials per process (n*) and processes per version to detect a speedup θ (default 1 + 2δ) as
-    "faster ≥ δ" with the given power, from one record's costs and its variance components."""
+    """Trials per process (n*, rounded up to a multiple of 4) and processes per version to detect a speedup θ (default 1 + 2δ) as
+    "faster ≥ δ" with the given power, from one record's costs and its variance components.
+
+    With few processes the σ₂ estimate is noisy and can land near 0, which would recommend very
+    few, very long processes. So by default the upper end of σ₂'s interval is used, and at least
+    `min_processes` processes are recommended (fewer leave intervals and outlier checks fragile).
+    """
     c1, c2 = record.trial_seconds(), record.process_overhead_seconds()
     if c1 is None or c2 is None:
         return None
     theta = theta if theta is not None else 1.0 + 2.0 * delta
-    s1, s2, f = components.sigma1, components.sigma2, components.inflation
-    n = int(min(max(round(optimal_trials(c1, c2, s1, s2, f)), 2), max_trials))
+    s1, f = components.sigma1, components.inflation
+    s2 = components.sigma2_ci[1] if conservative and math.isfinite(components.sigma2_ci[1]) else components.sigma2
+    n_star = optimal_trials(c1, c2, s1, s2, f)
+    # sigma2 = 0 makes n* infinite: with no process-to-process spread, longer processes are cheapest.
+    n = max_trials if not math.isfinite(n_star) else int(min(max(round(n_star), 1), max_trials))
+    # bench_press splits trials into four ABBA BAAB visits; a multiple of 4 keeps them balanced.
+    n = 4 * math.ceil(n / 4)
     P = processes_for_power(theta, delta, n, s1, s2, power, f=f)
+    if P is not None:
+        P = max(P, min_processes)
     achieved = gate_power(P, n, s1, s2, theta, delta, f=f) if P else math.nan
-    return DesignHint(n, P, achieved, theta, c1, c2)
+    return DesignHint(n, P, achieved, theta, c1, c2, s2)

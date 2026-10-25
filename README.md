@@ -2,11 +2,34 @@
 
 Research toward a rigorous performance-benchmarking suite for a software engineering team (currently working in Dart). The goal is to tell, with quantified uncertainty, whether a code change made things faster or slower, by how much, and how sure we are.
 
-**Status: implementation started (Part A: A0 setup and A0c pilot done, A2 analysis core done).** The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
+**Status: implementation started (Part A: A0 setup, A0c pilot, A2 analysis core and A3 report done).** The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
 
 ## Background
 
 The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable Time*. Their approach decomposes variance across iterations, process executions and builds, picks repetition counts from the cost and variance of each level, and reports speedup as an effect-size confidence interval instead of a $p$-value. A more recent literature review adds findings that challenge parts of it, mainly that steady state is often not reached, plus reactive stopping rules and CI-noise handling.
+
+## Usage
+
+Run benchmarks with bench_press using several processes per version (5 or more), then analyse the JSON with `bench-stats` (installed by `pip install -e ".[dev]"` into the `perfBench` environment):
+
+```bash
+# Compare a candidate run with a baseline run (same benchmarks, separate process launches)
+bench-stats analyze baseline.json candidate.json --threshold 0.03
+
+# One run: compare Benchmark.compare variants with their group baseline (paired by process),
+# and report variance diagnostics and a design hint for every benchmark
+bench-stats analyze run.json
+
+# Same content as JSON, for scripts or CI
+bench-stats analyze baseline.json candidate.json --format json -o report.json
+```
+
+The Markdown report has three parts:
+- **Comparisons:** for each benchmark, the speedup, its process-level interval, the δ-gate verdict (faster ≥ δ, slower ≥ δ, no meaningful change, inconclusive), whether it stays detectable after Benjamini–Hochberg, and what bench_press itself prints for the same data.
+- **Variance diagnostics:** σ₁, σ₂, k, ρ and launch drift.
+- **Design hint:** trials per process and processes per version for a target power.
+
+`bench-stats analyze --help` lists the options: confidence level, per-process mean or median, FDR q, power and the effect to plan for.
 
 ## Repository layout
 
@@ -23,7 +46,7 @@ The project started from Kalibera & Jones, *Rigorous Benchmarking in Reasonable 
 | [sandbox/synth.py](sandbox/synth.py) | Synthetic data generator with known ground truth, for validating detectors and estimators. |
 | `sandbox/output/` | Tables (CSV), plots (PNG) and `results.txt` from `analyze.py`. |
 | [sandbox/spikes/](sandbox/spikes) | Throwaway feasibility checks (e.g. the Bayesian grid estimator spike cited in the local plan, `docs/plan.md` §B.2a). |
-| [pyproject.toml](pyproject.toml), [src/bench_stats/](src/bench_stats), [tests/](tests) | The `bench_stats` Python package (the statistical layer) and its pytest suite. Part A's analysis core (A2) is in place: it loads bench_press run JSON ([io.py](src/bench_stats/io.py)) and compares versions ([compare.py](src/bench_stats/compare.py)) with process-level Fieller, the δ gate, variance components that allow for autocorrelation and drift, design recommendations and Benjamini–Hochberg (all in [stats/](src/bench_stats/stats)). It also holds exact ports of bench_press's own interval and verdict rules, checked against golden fixtures generated from bench_press `5fd6396` ([tests/fixtures/](tests/fixtures)). Install with `pip install -e ".[dev]"` (into the `perfBench` conda environment), run tests with `python -m pytest`. |
+| [pyproject.toml](pyproject.toml), [src/bench_stats/](src/bench_stats), [tests/](tests) | The `bench_stats` Python package (the statistical layer) and its pytest suite. Part A's analysis core (A2) is in place: it loads bench_press run JSON ([io.py](src/bench_stats/io.py)) and compares versions ([compare.py](src/bench_stats/compare.py)) with process-level Fieller, the δ gate, variance components that allow for autocorrelation and drift, design recommendations and Benjamini–Hochberg (all in [stats/](src/bench_stats/stats)), and reports the results as Markdown or JSON ([report.py](src/bench_stats/report.py), CLI `bench-stats analyze`). It also holds exact ports of bench_press's own interval and verdict rules, checked against golden fixtures generated from bench_press `5fd6396` ([tests/fixtures/](tests/fixtures)). Install with `pip install -e ".[dev]"` (into the `perfBench` conda environment), run tests with `python -m pytest`. |
 | [bench/](bench) | Controlled Dart benchmarks (a fixed workload with an injectable, calibrated spin cost, plus a same-binary group) for pilots and real-hardware validation. Needs a bench_press clone next to this repository; see [bench/README.md](bench/README.md). |
 | `data/runs/` | Raw bench_press run JSON. Git-ignored. |
 

@@ -28,7 +28,10 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import stats
 
-ROBUST_Z_OUTLIER = 3.5
+OUTLIER_ALPHA = 0.01
+# Below these, the lag-1 correlation and the launch-order drift test are too unstable to report.
+MIN_TRIALS_FOR_RHO = 8
+MIN_PROCESSES_FOR_DRIFT = 5
 
 
 @dataclass(frozen=True)
@@ -51,10 +54,13 @@ class VarianceComponents:
     launch_spearman: float
     launch_spearman_p: float
     outlier_processes: tuple[int, ...]
+    # False when autocorrelation was off or there were too few trials per process (ρ = 0 assumed).
+    rho_estimated: bool = True
 
     @property
     def drift_detected(self) -> bool:
-        return self.processes >= 5 and self.launch_spearman_p < 0.01
+        return self.processes >= MIN_PROCESSES_FOR_DRIFT and self.launch_spearman_p < 0.01
+
 
 
 def ar1_inflation(rho: float | np.ndarray, n: int | np.ndarray) -> np.ndarray:
@@ -88,7 +94,7 @@ def _estimate(Y: np.ndarray, mask: np.ndarray, n: np.ndarray, autocorrelation: b
     ss_total = np.sum(ss * multi, -1)
     n_bar = n[multi].mean() if multi.any() else 1.0
 
-    if autocorrelation and n_bar > 3:
+    if autocorrelation and n_bar >= MIN_TRIALS_FOR_RHO:
         lag = np.sum(R[..., 1:] * R[..., :-1], -1)
         with np.errstate(invalid="ignore", divide="ignore"):
             rho_hat = np.where(ss_total > 0, np.sum(lag * multi, -1) / ss_total, 0.0)
@@ -150,21 +156,36 @@ def upstream_share(process_trials_ns: Sequence[Sequence[float]]) -> float:
     return var_between / total_var if total_var > 0.0 else 0.0
 
 
-def outlier_processes(process_values: Sequence[float], threshold: float = ROBUST_Z_OUTLIER) -> tuple[int, ...]:
-    """Indices of processes whose log value has a robust z-score above `threshold` (flagged, not removed).
+def outlier_processes(process_values: Sequence[float], alpha: float = OUTLIER_ALPHA) -> tuple[int, ...]:
+    """Indices of outlier processes by Rosner's generalized ESD test on log values (flagged, not removed).
 
-    Needs at least 5 processes: with fewer, the median absolute deviation is too unstable to call
-    anything an outlier.
+    Tests for up to max(1, P // 5) outliers and keeps the chance of flagging anything in a clean
+    normal sample at about `alpha`. A robust z-score rule (|z| > 3.5) was tried first and flagged
+    9–20% of clean benchmarks at P = 5–40, because it tests every process separately. Needs at
+    least 5 processes.
     """
     y = np.log(np.asarray(process_values, float))
-    if y.size < 5:
+    n = y.size
+    if n < 5:
         return ()
-    med = np.median(y)
-    mad = np.median(np.abs(y - med))
-    if mad == 0:
-        return ()
-    z = 0.6745 * (y - med) / mad
-    return tuple(int(i) for i in np.flatnonzero(np.abs(z) > threshold))
+    idx = np.arange(n)
+    removed: list[int] = []
+    n_outliers = 0
+    for i in range(1, max(1, n // 5) + 1):
+        sd = y[idx].std(ddof=1)
+        if sd == 0:
+            break
+        dev = np.abs(y[idx] - y[idx].mean())
+        j = int(np.argmax(dev))
+        r = dev[j] / sd
+        m = n - i + 1
+        t = stats.t.ppf(1 - alpha / (2 * m), m - 2)
+        crit = (m - 1) * t / math.sqrt((m - 2 + t**2) * m)
+        removed.append(int(idx[j]))
+        idx = np.delete(idx, j)
+        if r > crit:
+            n_outliers = i
+    return tuple(sorted(removed[:n_outliers]))
 
 
 def variance_components(
@@ -208,9 +229,9 @@ def variance_components(
         return (float(np.percentile(x, lo)), float(np.percentile(x, hi)))
 
     m = est["m"]
-    if P >= 3:
+    if P >= MIN_PROCESSES_FOR_DRIFT and np.var(m) > 0:
         rs, rs_p = stats.spearmanr(np.arange(P), m)
-        von_neumann = float(np.mean(np.diff(m) ** 2) / (2 * np.var(m, ddof=1))) if np.var(m) > 0 else math.nan
+        von_neumann = float(np.mean(np.diff(m) ** 2) / (2 * np.var(m, ddof=1)))
     else:
         rs, rs_p, von_neumann = math.nan, math.nan, math.nan
 
@@ -233,4 +254,5 @@ def variance_components(
         launch_spearman=float(rs),
         launch_spearman_p=float(rs_p),
         outlier_processes=outlier_processes(np.exp(m)),
+        rho_estimated=autocorrelation and float(n[n >= 2].mean()) >= MIN_TRIALS_FOR_RHO,
     )

@@ -17,6 +17,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 
+[project.scripts]
+bench-stats = "bench_stats.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
