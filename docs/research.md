@@ -118,7 +118,7 @@ Treat these as competing estimators to compare empirically, not a choice to make
 
 **Suggested approach:** keep the estimator pluggable (the runner-to-analysis data format is the contract). Use the hierarchical bootstrap as the baseline and Bayesian as a comparison. Decide with a simulation study on synthetic data with known effects (hierarchical variance, segment shifts, bimodality, autocorrelation, small run counts), comparing coverage, false-positive rate and power for Fieller, bootstrap and Bayesian.
 
-Related work to look up (unverified): Furia, Feldt & Torkar on Bayesian data analysis in software engineering; Bulej et al. on duet/paired benchmarking; Davison & Hinkley on bootstrap methods.
+Related work, now verified: Furia, Feldt & Torkar (TSE 2021) on Bayesian data analysis in software engineering and Bulej et al. (ICPE 2020) on duet/paired benchmarking are in [bayesian-literature.md](bayesian-literature.md) §8, which collects all sources for the Bayesian option (plan Part B). Davison & Hinkley, *Bootstrap Methods and their Application* (Cambridge University Press, 1997), is the reference for the bootstrap estimator.
 
 ---
 

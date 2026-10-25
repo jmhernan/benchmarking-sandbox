@@ -48,3 +48,13 @@ dart compile exe tool/calibrate_spin.dart -o /tmp/calibrate_spin
 `<workload_mean_ns>` is the bench_press `mean_ns` of a build without `BENCH_SPIN`. The tool times only the spin, because the workload's speed depends on the whole binary. On 2026-10-24 the same sort took about 70 µs/op in a standalone program, about 115 µs/op once an unrelated `List<double>.sort` was added to that program, and about 135–138 µs/op inside the bench_press harness. AOT whole-program optimisation specialises `List.sort` only when a single element type is sorted anywhere in the program.
 
 Measured that day: workload ≈ 138 µs/op, spin ≈ 1.43 ns/iteration, so ≈ 4,800 iterations for +5%. A group run (AOT, 3 processes, `--threshold 0.03`) gave `identical_copy` 1.00× [1.00, 1.01] ✅ Equivalent and `spin` 0.95× [0.95, 0.95] ⚠️ Slow.
+
+## Golden fixtures for the Python ports
+
+[tool/golden_bench_press.dart](tool/golden_bench_press.dart) runs bench_press's own code (Fieller intervals, t and normal quantiles, the delta-table verdicts at several thresholds, `ProcessVarianceComponents`) on fixed, seeded inputs. It writes both the inputs and the outputs to `../tests/fixtures/`, so the `bench_stats` tests can check the Python ports to 1e-9 without Dart:
+
+```bash
+dart run tool/golden_bench_press.dart ../tests/fixtures
+```
+
+Regenerate the fixtures, and update the commit in the file names and in `tests/conftest.py`, whenever the bench_press pin changes.
