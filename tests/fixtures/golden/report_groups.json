@@ -1,0 +1,285 @@
+{
+  "schema": "bench-stats/report",
+  "schema_version": 1,
+  "bench_stats_version": "0.0.1",
+  "mode": "groups",
+  "inputs": {
+    "baseline": {
+      "file": "bench_press_suite_5fd6396.json",
+      "timestamp": "2026-10-25T00:00:00.000Z",
+      "dart_version": "golden",
+      "os": "golden",
+      "arch": "golden",
+      "benchmarks": 5
+    },
+    "candidate": null
+  },
+  "settings": {
+    "threshold": 0.03,
+    "conf": 0.95,
+    "reduce": "mean",
+    "fdr_q": 0.05,
+    "power": 0.8,
+    "detect": 0.06,
+    "seed": 0
+  },
+  "summary": {
+    "comparisons": 1,
+    "verdicts": {
+      "faster": 1,
+      "slower": 0,
+      "no meaningful change": 0,
+      "inconclusive": 0
+    },
+    "detectable": 1,
+    "detectable_bh": 1,
+    "expected_false_flags": {
+      "detectable (interval excludes 1)": 0.050000000000000044,
+      "gate ≥ δ, worst case at θ = 1 + δ": 0.025000000000000022
+    },
+    "only_baseline": [],
+    "only_candidate": []
+  },
+  "comparisons": [
+    {
+      "key": "fast:aot:group=G",
+      "name": "fast",
+      "baseline_key": "base:aot:group=G",
+      "paired": true,
+      "speedup": {
+        "method": "fieller-paired",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 1.117295305742036,
+        "lower": 1.0960137360968747,
+        "upper": 1.1387921095530011,
+        "conf": 0.95,
+        "df": 2.0,
+        "p_value": 0.0016975112981192826,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "paired-log",
+        "estimand": "ratio of geometric means (paired by process)",
+        "ratio": 1.1172848557254105,
+        "lower": 1.0961332440447213,
+        "upper": 1.1388446209577974,
+        "conf": 0.95,
+        "df": 2.0,
+        "p_value": 0.0016004988339200583,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "faster",
+        "label": "faster ≥ 3%",
+        "detectable": true,
+        "reason": ""
+      },
+      "detectable_bh": true,
+      "p_adjusted": 0.0016975112981192826,
+      "bench_press": {
+        "default": {
+          "status": "🚀 Faster",
+          "speedup": 1.117295305742036,
+          "lower": 1.0960137360968747,
+          "upper": 1.1387921095530011,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "🚀 Faster",
+          "speedup": 1.117295305742036,
+          "lower": 1.0960137360968747,
+          "upper": 1.1387921095530011,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 3,
+        "candidate": 3
+      },
+      "trials_per_process": {
+        "baseline": 4.0,
+        "candidate": 4.0
+      },
+      "warnings": [
+        "baseline: only 3 processes (5+ recommended).",
+        "candidate: only 3 processes (5+ recommended)."
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "key": "single:aot",
+      "name": "single",
+      "side": null,
+      "processes": 1,
+      "trials_per_process": 16.0,
+      "is_stable": true,
+      "components": null,
+      "design": null
+    },
+    {
+      "key": "multi:aot",
+      "name": "multi",
+      "side": null,
+      "processes": 4,
+      "trials_per_process": 6.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.012862654491378177,
+        "sigma1_ci": [
+          0.008826710395368899,
+          0.016784649314955102
+        ],
+        "sigma2": 0.007148536211309502,
+        "sigma2_ci": [
+          0.0,
+          0.015360839867162721
+        ],
+        "sigma2_iid": 0.007148536211309502,
+        "sigma2_drift": 0.005772843647033746,
+        "k": 1.6891443121760865,
+        "k_ci": [
+          1.0,
+          3.2652144209731273
+        ],
+        "icc": 0.23598106501575164,
+        "rho": 0.0,
+        "rho_estimated": false,
+        "inflation": 1.0,
+        "upstream_share": 0.29836213901792213,
+        "upstream_share_reported": 0.29836213901792213,
+        "drift": {
+          "spearman": null,
+          "p_value": null,
+          "von_neumann": null,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": null
+    },
+    {
+      "key": "unstable:aot",
+      "name": "unstable",
+      "side": null,
+      "processes": 3,
+      "trials_per_process": 5.0,
+      "is_stable": false,
+      "components": {
+        "sigma1": 0.00857925315118583,
+        "sigma1_ci": [
+          0.005225117679771421,
+          0.011989801703348723
+        ],
+        "sigma2": 0.0,
+        "sigma2_ci": [
+          0.0,
+          0.0062672037721683786
+        ],
+        "sigma2_iid": 0.0,
+        "sigma2_drift": 0.0,
+        "k": 1.0,
+        "k_ci": [
+          1.0,
+          2.17872593539557
+        ],
+        "icc": 0.0,
+        "rho": 0.0,
+        "rho_estimated": false,
+        "inflation": 1.0,
+        "upstream_share": 0.0,
+        "upstream_share_reported": 0.0,
+        "drift": {
+          "spearman": null,
+          "p_value": null,
+          "von_neumann": null,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": null
+    },
+    {
+      "key": "base:aot:group=G",
+      "name": "base",
+      "side": null,
+      "processes": 3,
+      "trials_per_process": 4.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009811723757062654,
+        "sigma1_ci": [
+          0.005210670132955964,
+          0.014200054290777815
+        ],
+        "sigma2": 0.004346085474953504,
+        "sigma2_ci": [
+          0.0,
+          0.012040836803350233
+        ],
+        "sigma2_iid": 0.004346085474953504,
+        "sigma2_drift": 0.00633174512361275,
+        "k": 1.3359687372382074,
+        "k_ci": [
+          1.0,
+          3.3017591707374585
+        ],
+        "icc": 0.16402157290606423,
+        "rho": 0.0,
+        "rho_estimated": false,
+        "inflation": 1.0,
+        "upstream_share": 0.30731793960481546,
+        "upstream_share_reported": 0.30731793960481546,
+        "drift": {
+          "spearman": null,
+          "p_value": null,
+          "von_neumann": null,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": null
+    },
+    {
+      "key": "fast:aot:group=G",
+      "name": "fast",
+      "side": null,
+      "processes": 3,
+      "trials_per_process": 4.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.010897171318095826,
+        "sigma1_ci": [
+          0.0063021792136544914,
+          0.015926863589372627
+        ],
+        "sigma2": 0.0,
+        "sigma2_ci": [
+          0.0,
+          0.009030821384268304
+        ],
+        "sigma2_iid": 0.0,
+        "sigma2_drift": 0.0,
+        "k": 1.0,
+        "k_ci": [
+          1.0,
+          2.2520255965519054
+        ],
+        "icc": 0.0,
+        "rho": 0.0,
+        "rho_estimated": false,
+        "inflation": 1.0,
+        "upstream_share": 0.0,
+        "upstream_share_reported": 0.0,
+        "drift": {
+          "spearman": null,
+          "p_value": null,
+          "von_neumann": null,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": null
+    }
+  ]
+}

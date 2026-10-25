@@ -90,3 +90,16 @@ def test_recommend_design_uses_record_costs():
     assert hint.c2 == pytest.approx(2.0)
     assert 2 <= hint.trials_per_process <= 200
     assert hint.processes_per_version is not None and hint.power >= 0.8
+
+
+def test_recommend_design_when_sigma2_is_zero():
+    rng = np.random.default_rng(12)
+    rec = make_record(ar1_trials(rng, 20, 16, 0.01, mean=1e5), batch=1000, warmup_seconds=2.0)
+    vc = compare(rec, rec).components_baseline
+    vc = type(vc)(**{**vc.__dict__, "sigma2": 0.0})
+    hint = recommend_design(rec, vc, delta=0.03, max_trials=200, conservative=False)
+    assert hint.trials_per_process == 200
+    assert hint.processes_per_version == 5  # floor: never fewer than 5
+    conservative = recommend_design(rec, vc, delta=0.03)
+    assert conservative.sigma2_used == vc.sigma2_ci[1] > 0
+    assert conservative.trials_per_process < 200

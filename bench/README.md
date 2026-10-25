@@ -34,6 +34,9 @@ dart run bench_press run -t aot --processes 3 --compiler-flag=-DBENCH_SPIN=4800 
 
 # Group mode with the threshold gate
 dart run bench_press run -t aot --processes 3 --threshold 0.03 --no-save benchmark/group_benchmark.dart
+
+# Analyse a run (from the repository root, perfBench environment)
+bench-stats analyze data/runs/<name>.json
 ```
 
 Builds with different `-D` values write to the same artifact path (`.dart_tool/bench_press/build/aot/`), so run them one after another, not in one interleaved session.

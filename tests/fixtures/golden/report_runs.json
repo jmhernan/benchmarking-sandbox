@@ -1,0 +1,1362 @@
+{
+  "schema": "bench-stats/report",
+  "schema_version": 1,
+  "bench_stats_version": "0.0.1",
+  "mode": "runs",
+  "inputs": {
+    "baseline": {
+      "file": "report_baseline.json",
+      "timestamp": "2026-10-25T00:00:00.000Z",
+      "dart_version": "3.13.7 (stable) (fixture)",
+      "os": "macos",
+      "arch": "arm64",
+      "benchmarks": 9
+    },
+    "candidate": {
+      "file": "report_candidate.json",
+      "timestamp": "2026-10-25T00:00:00.000Z",
+      "dart_version": "3.13.7 (stable) (fixture)",
+      "os": "macos",
+      "arch": "arm64",
+      "benchmarks": 9
+    }
+  },
+  "settings": {
+    "threshold": 0.03,
+    "conf": 0.95,
+    "reduce": "mean",
+    "fdr_q": 0.05,
+    "power": 0.8,
+    "detect": 0.06,
+    "seed": 0
+  },
+  "summary": {
+    "comparisons": 8,
+    "verdicts": {
+      "faster": 1,
+      "slower": 1,
+      "no meaningful change": 4,
+      "inconclusive": 2
+    },
+    "detectable": 3,
+    "detectable_bh": 3,
+    "expected_false_flags": {
+      "detectable (interval excludes 1)": 0.40000000000000036,
+      "gate ≥ δ, worst case at θ = 1 + δ": 0.20000000000000018
+    },
+    "only_baseline": [
+      "retired:aot"
+    ],
+    "only_candidate": [
+      "new:aot"
+    ]
+  },
+  "comparisons": [
+    {
+      "key": "same:aot",
+      "name": "same",
+      "baseline_key": "same:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 0.9992076719649036,
+        "lower": 0.9900778918882516,
+        "upper": 1.008368718704852,
+        "conf": 0.95,
+        "df": 7.184659863811845,
+        "p_value": 0.8441833820769234,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 0.9991841660316663,
+        "lower": 0.9901199918378468,
+        "upper": 1.0083313193133672,
+        "conf": 0.95,
+        "df": 7.19639377085521,
+        "p_value": 0.8390296861705059,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "no meaningful change",
+        "label": "no meaningful change",
+        "detectable": false,
+        "reason": ""
+      },
+      "detectable_bh": false,
+      "p_adjusted": 0.847730720012737,
+      "bench_press": {
+        "default": {
+          "status": "➖ ⚪ Neutral",
+          "speedup": 0.9992076719649036,
+          "lower": 0.9900778588938404,
+          "upper": 1.008368751925642,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "✅ Equivalent",
+          "speedup": 0.9992076719649036,
+          "lower": 0.9900778588938404,
+          "upper": 1.008368751925642,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 6,
+        "candidate": 6
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": []
+    },
+    {
+      "key": "faster:aot",
+      "name": "faster",
+      "baseline_key": "faster:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 1.0967279374043264,
+        "lower": 1.0860331630512117,
+        "upper": 1.1075182717861176,
+        "conf": 0.95,
+        "df": 9.67816914040024,
+        "p_value": 2.1633094228577125e-09,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 1.0967232811917949,
+        "lower": 1.0860683524735444,
+        "upper": 1.1074827406292516,
+        "conf": 0.95,
+        "df": 9.924764858502632,
+        "p_value": 1.4235469590315262e-09,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "faster",
+        "label": "faster ≥ 3%",
+        "detectable": true,
+        "reason": ""
+      },
+      "detectable_bh": true,
+      "p_adjusted": 7.571582980001993e-09,
+      "bench_press": {
+        "default": {
+          "status": "🚀 Faster",
+          "speedup": 1.0967279374043264,
+          "lower": 1.086033157556178,
+          "upper": 1.1075182773797887,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "🚀 Faster",
+          "speedup": 1.0967279374043264,
+          "lower": 1.086033157556178,
+          "upper": 1.1075182773797887,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 6,
+        "candidate": 6
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": []
+    },
+    {
+      "key": "slower:aot",
+      "name": "slower",
+      "baseline_key": "slower:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 0.9275046444239233,
+        "lower": 0.9212257964377475,
+        "upper": 0.9338468197638341,
+        "conf": 0.95,
+        "df": 7.799547692069367,
+        "p_value": 9.528261599502173e-09,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 0.9275141610797812,
+        "lower": 0.9212723027968706,
+        "upper": 0.9337983095679936,
+        "conf": 0.95,
+        "df": 8.153301983358793,
+        "p_value": 4.4133076977930085e-09,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "slower",
+        "label": "slower ≥ 3%",
+        "detectable": true,
+        "reason": ""
+      },
+      "detectable_bh": true,
+      "p_adjusted": 2.2232610398838403e-08,
+      "bench_press": {
+        "default": {
+          "status": "⚠️ Regression",
+          "speedup": 0.9275046444239231,
+          "lower": 0.92122578327513,
+          "upper": 0.9338468331933024,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "⚠️ Regression",
+          "speedup": 0.9275046444239231,
+          "lower": 0.92122578327513,
+          "upper": 0.9338468331933024,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 6,
+        "candidate": 6
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": []
+    },
+    {
+      "key": "small:aot",
+      "name": "small",
+      "baseline_key": "small:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 1.0160635750638292,
+        "lower": 1.0142365180572634,
+        "upper": 1.017893143364835,
+        "conf": 0.95,
+        "df": 13.166238630892675,
+        "p_value": 5.633489521886904e-11,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 1.0160629892626332,
+        "lower": 1.0142373054584901,
+        "upper": 1.0178919593996048,
+        "conf": 0.95,
+        "df": 13.256325620928182,
+        "p_value": 4.931175738977477e-11,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "no meaningful change",
+        "label": "no meaningful change (detectable but < 3%)",
+        "detectable": true,
+        "reason": ""
+      },
+      "detectable_bh": true,
+      "p_adjusted": 3.943442665320833e-10,
+      "bench_press": {
+        "default": {
+          "status": "➖ ⚪ Neutral",
+          "speedup": 1.0160635750638292,
+          "lower": 1.0142365179252937,
+          "upper": 1.0178931434971679,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "✅ Equivalent",
+          "speedup": 1.0160635750638292,
+          "lower": 1.0142365179252937,
+          "upper": 1.0178931434971679,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 8,
+        "candidate": 8
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": []
+    },
+    {
+      "key": "noisy:aot",
+      "name": "noisy",
+      "baseline_key": "noisy:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 1.0038406023427084,
+        "lower": 0.9612673127056557,
+        "upper": 1.0483627991480493,
+        "conf": 0.95,
+        "df": 9.991986996591432,
+        "p_value": 0.847730720012737,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 1.003879302997069,
+        "lower": 0.9615298158331468,
+        "upper": 1.0480940251578832,
+        "conf": 0.95,
+        "df": 9.979337242733132,
+        "p_value": 0.845337965915107,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "inconclusive",
+        "label": "inconclusive (interval crosses the ±δ band)",
+        "detectable": false,
+        "reason": "interval crosses the ±δ band"
+      },
+      "detectable_bh": false,
+      "p_adjusted": 0.847730720012737,
+      "bench_press": {
+        "default": {
+          "status": "➖ ⚪ Neutral",
+          "speedup": 1.0038406023427087,
+          "lower": 0.9612672952101138,
+          "upper": 1.0483628182820661,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "➖ ⚪ Inconclusive",
+          "speedup": 1.0038406023427087,
+          "lower": 0.9612672952101138,
+          "upper": 1.0483628182820661,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 6,
+        "candidate": 6
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": []
+    },
+    {
+      "key": "single:aot",
+      "name": "single",
+      "baseline_key": "single:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": null,
+        "lower": null,
+        "upper": null,
+        "conf": 0.95,
+        "df": null,
+        "p_value": null,
+        "bounded": false
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": null,
+        "lower": null,
+        "upper": null,
+        "conf": 0.95,
+        "df": null,
+        "p_value": null,
+        "bounded": false
+      },
+      "gate": {
+        "verdict": "inconclusive",
+        "label": "inconclusive (unbounded interval)",
+        "detectable": false,
+        "reason": "unbounded interval"
+      },
+      "detectable_bh": false,
+      "p_adjusted": null,
+      "bench_press": {
+        "default": {
+          "status": "➖ ⚪ Neutral",
+          "speedup": 0.9880882194717361,
+          "lower": 0.9785696987984901,
+          "upper": 0.9977118134751769,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "✅ Equivalent",
+          "speedup": 0.9880882194717361,
+          "lower": 0.9785696987984901,
+          "upper": 0.9977118134751769,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 1,
+        "candidate": 1
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": [
+        "baseline: 1 process, so no process-level interval. bench_press's interval uses that process's trials and is too narrow whenever processes differ. Rerun with --processes 5 or more.",
+        "candidate: 1 process, so no process-level interval. bench_press's interval uses that process's trials and is too narrow whenever processes differ. Rerun with --processes 5 or more."
+      ]
+    },
+    {
+      "key": "unstable:aot",
+      "name": "unstable",
+      "baseline_key": "unstable:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 1.0052437235927933,
+        "lower": 0.9982050219495777,
+        "upper": 1.012341435868785,
+        "conf": 0.95,
+        "df": 9.678249299457324,
+        "p_value": 0.12776258010655941,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 1.0052483832236037,
+        "lower": 0.9982012284113868,
+        "upper": 1.0123452899190417,
+        "conf": 0.95,
+        "df": 9.658496670924047,
+        "p_value": 0.12778061786119577,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "no meaningful change",
+        "label": "no meaningful change",
+        "detectable": false,
+        "reason": ""
+      },
+      "detectable_bh": false,
+      "p_adjusted": 0.22358451518647898,
+      "bench_press": {
+        "default": {
+          "status": "❓ Unresolved",
+          "speedup": 1.0052437235927936,
+          "lower": null,
+          "upper": null,
+          "reasons": [
+            "baseline samples unstable"
+          ]
+        },
+        "threshold": {
+          "status": "❓ Unresolved",
+          "speedup": 1.0052437235927936,
+          "lower": null,
+          "upper": null,
+          "reasons": [
+            "baseline samples unstable"
+          ]
+        }
+      },
+      "processes": {
+        "baseline": 6,
+        "candidate": 6
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": [
+        "baseline: bench_press marked it unstable (a process failed warmup or the CV check); the JSON does not say which process."
+      ]
+    },
+    {
+      "key": "drifting:aot",
+      "name": "drifting",
+      "baseline_key": "drifting:aot",
+      "paired": false,
+      "speedup": {
+        "method": "fieller",
+        "estimand": "ratio of arithmetic means",
+        "ratio": 0.9986265829040962,
+        "lower": 0.9866229197663915,
+        "upper": 1.0108376355094104,
+        "conf": 0.95,
+        "df": 11.950903405449539,
+        "p_value": 0.8090613043736282,
+        "bounded": true
+      },
+      "cross_check": {
+        "method": "welch-log",
+        "estimand": "ratio of geometric means",
+        "ratio": 0.9986712481034634,
+        "lower": 0.9866366189689109,
+        "upper": 1.0108526712000703,
+        "conf": 0.95,
+        "df": 11.958852610679628,
+        "p_value": 0.815118868774352,
+        "bounded": true
+      },
+      "gate": {
+        "verdict": "no meaningful change",
+        "label": "no meaningful change",
+        "detectable": false,
+        "reason": ""
+      },
+      "detectable_bh": false,
+      "p_adjusted": 0.847730720012737,
+      "bench_press": {
+        "default": {
+          "status": "➖ ⚪ Neutral",
+          "speedup": 0.9986265829040962,
+          "lower": 0.9866229181788915,
+          "upper": 1.0108376371522392,
+          "reasons": []
+        },
+        "threshold": {
+          "status": "✅ Equivalent",
+          "speedup": 0.9986265829040962,
+          "lower": 0.9866229181788915,
+          "upper": 1.0108376371522392,
+          "reasons": []
+        }
+      },
+      "processes": {
+        "baseline": 8,
+        "candidate": 8
+      },
+      "trials_per_process": {
+        "baseline": 12.0,
+        "candidate": 12.0
+      },
+      "warnings": [
+        "baseline: process means drift with launch order (Spearman +0.93, p = 0.00086); keep versions interleaved.",
+        "candidate: process means drift with launch order (Spearman +0.98, p = 3.3e-05); keep versions interleaved."
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "key": "same:aot",
+      "name": "same",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009531156088870096,
+        "sigma1_ci": [
+          0.007831755696815533,
+          0.011181351152659145
+        ],
+        "sigma2": 0.008103944837754411,
+        "sigma2_ci": [
+          0.0021342475396215264,
+          0.013388612983470678
+        ],
+        "sigma2_iid": 0.00807827164525492,
+        "sigma2_drift": 0.009687982819474698,
+        "k": 3.102412727423667,
+        "k_ci": [
+          1.2512053063337452,
+          5.245303938551536
+        ],
+        "icc": 0.41959647437794106,
+        "rho": -0.02814178625805488,
+        "rho_estimated": true,
+        "inflation": 0.9496940441514939,
+        "upstream_share": 0.41104262588361407,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.2,
+          "p_value": 0.7040000000000001,
+          "von_neumann": 1.386793823327355,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 6,
+        "power": 0.8591961368205213,
+        "detect": 0.06,
+        "c1_seconds": 0.10007628087290105,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.013388612983470678
+      }
+    },
+    {
+      "key": "faster:aot",
+      "name": "faster",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009871722160808468,
+        "sigma1_ci": [
+          0.008161747210941577,
+          0.011479971976399056
+        ],
+        "sigma2": 0.007372963230243635,
+        "sigma2_ci": [
+          0.0008063612093105513,
+          0.01265424449797651
+        ],
+        "sigma2_iid": 0.007382143515571357,
+        "sigma2_drift": 0.006971400700081497,
+        "k": 2.7765436742913447,
+        "k_ci": [
+          1.1818938949747784,
+          4.734402152533191
+        ],
+        "icc": 0.3580795400139668,
+        "rho": 0.00827720821850697,
+        "rho_estimated": true,
+        "inflation": 1.0152899256322778,
+        "upstream_share": 0.3569501572816931,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.4285714285714286,
+          "p_value": 0.3965014577259473,
+          "von_neumann": 0.9079930027066572,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 6,
+        "power": 0.8854334183201081,
+        "detect": 0.06,
+        "c1_seconds": 0.1002224300377663,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.01265424449797651
+      }
+    },
+    {
+      "key": "slower:aot",
+      "name": "slower",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.00976119592555901,
+        "sigma1_ci": [
+          0.008020896562510288,
+          0.011578019252140425
+        ],
+        "sigma2": 0.002027065465270275,
+        "sigma2_ci": [
+          0.0,
+          0.004827283390442091
+        ],
+        "sigma2_iid": 0.002387531781711768,
+        "sigma2_drift": 0.0019693498592954577,
+        "k": 1.3043061440528185,
+        "k_ci": [
+          0.9303084163273414,
+          2.122242070128559
+        ],
+        "icc": 0.04134215583776656,
+        "rho": 0.09184825371351149,
+        "rho_estimated": true,
+        "inflation": 1.1837140629251426,
+        "upstream_share": 0.06494315564173714,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.6,
+          "p_value": 0.208,
+          "von_neumann": 0.9829242423877018,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 12,
+        "processes_per_version": 5,
+        "power": 0.999995381021386,
+        "detect": 0.06,
+        "c1_seconds": 0.09976890215413678,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.004827283390442091
+      }
+    },
+    {
+      "key": "small:aot",
+      "name": "small",
+      "side": "baseline",
+      "processes": 8,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.004370371172082248,
+        "sigma1_ci": [
+          0.003709585580541264,
+          0.005068005045037009
+        ],
+        "sigma2": 0.0012898801506622101,
+        "sigma2_ci": [
+          0.0,
+          0.0024576253345770147
+        ],
+        "sigma2_iid": 0.001363766675047622,
+        "sigma2_drift": 0.0013657948114781638,
+        "k": 1.4690895209351627,
+        "k_ci": [
+          0.9655139390747485,
+          2.266203630046974
+        ],
+        "icc": 0.08012887751224058,
+        "rho": 0.05832773997999298,
+        "rho_estimated": true,
+        "inflation": 1.1129183177547772,
+        "upstream_share": 0.10328613261597974,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.19047619047619052,
+          "p_value": 0.6514014957024813,
+          "von_neumann": 1.0586879113439924,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 1.0,
+        "detect": 0.06,
+        "c1_seconds": 0.100045012376495,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.0024576253345770147
+      }
+    },
+    {
+      "key": "noisy:aot",
+      "name": "noisy",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.01057477504075001,
+        "sigma1_ci": [
+          0.008752363657693692,
+          0.012389641246592097
+        ],
+        "sigma2": 0.032559509034607255,
+        "sigma2_ci": [
+          0.013126714763494852,
+          0.05190811318780311
+        ],
+        "sigma2_iid": 0.0325884320000666,
+        "sigma2_drift": 0.03373301954325542,
+        "k": 10.721319044523856,
+        "k_ci": [
+          4.372615320040653,
+          17.32138434790753
+        ],
+        "icc": 0.9045811629196475,
+        "rho": 0.09259768454600553,
+        "rho_estimated": true,
+        "inflation": 1.1853505692123851,
+        "upstream_share": 0.9112211717749245,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.2,
+          "p_value": 0.7040000000000001,
+          "von_neumann": 1.0726263300713204,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 54,
+        "power": 0.8056077275704006,
+        "detect": 0.06,
+        "c1_seconds": 0.10253754264164809,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.05190811318780311
+      }
+    },
+    {
+      "key": "single:aot",
+      "name": "single",
+      "side": "baseline",
+      "processes": 1,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": null,
+      "design": null
+    },
+    {
+      "key": "unstable:aot",
+      "name": "unstable",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": false,
+      "components": {
+        "sigma1": 0.010642489345079277,
+        "sigma1_ci": [
+          0.008830339146713256,
+          0.012559484252716635
+        ],
+        "sigma2": 0.004099841033119212,
+        "sigma2_ci": [
+          0.0,
+          0.007425402501038023
+        ],
+        "sigma2_iid": 0.0037904978035017372,
+        "sigma2_drift": 0.00538998521286418,
+        "k": 1.5949309488361627,
+        "k_ci": [
+          0.8170251971255299,
+          2.652099023066025
+        ],
+        "icc": 0.12922681332355138,
+        "rho": -0.1465465227393778,
+        "rho_estimated": true,
+        "inflation": 0.762948610110775,
+        "upstream_share": 0.08936053123387823,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.2,
+          "p_value": 0.7040000000000001,
+          "von_neumann": 1.5099264452180372,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 0.9955164625778129,
+        "detect": 0.06,
+        "c1_seconds": 0.10003091287697184,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.007425402501038023
+      }
+    },
+    {
+      "key": "drifting:aot",
+      "name": "drifting",
+      "side": "baseline",
+      "processes": 8,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.008902547381096361,
+        "sigma1_ci": [
+          0.0075670302737232634,
+          0.010269761760564093
+        ],
+        "sigma2": 0.008216491412877908,
+        "sigma2_ci": [
+          0.0034611406658502618,
+          0.013052910295624711
+        ],
+        "sigma2_iid": 0.008110496753405092,
+        "sigma2_drift": 0.002410611980243663,
+        "k": 3.3138445169515687,
+        "k_ci": [
+          1.5965622146934921,
+          5.31831906893264
+        ],
+        "icc": 0.4599886477382875,
+        "rho": -0.14874951460473362,
+        "rho_estimated": true,
+        "inflation": 0.7598104217506468,
+        "upstream_share": 0.4141432407628884,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.9285714285714287,
+          "p_value": 0.0008629681828999772,
+          "von_neumann": 0.1493100115656449,
+          "detected": true
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 6,
+        "power": 0.8845103074679577,
+        "detect": 0.06,
+        "c1_seconds": 0.10122526567114178,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.013052910295624711
+      }
+    },
+    {
+      "key": "retired:aot",
+      "name": "retired",
+      "side": "baseline",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009671126555705921,
+        "sigma1_ci": [
+          0.008044565044084247,
+          0.011273275629311632
+        ],
+        "sigma2": 0.0,
+        "sigma2_ci": [
+          0.0,
+          0.0037224170123957416
+        ],
+        "sigma2_iid": 0.0008485824425960093,
+        "sigma2_drift": 0.0,
+        "k": 1.0474956817879826,
+        "k_ci": [
+          0.8599181177800472,
+          1.7322921242501337
+        ],
+        "icc": 0.0,
+        "rho": 0.05060486212987682,
+        "rho_estimated": true,
+        "inflation": 1.0972472033644707,
+        "upstream_share": 0.009573694021620678,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.6571428571428573,
+          "p_value": 0.1561749271137024,
+          "von_neumann": 0.9743999665133444,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 12,
+        "processes_per_version": 5,
+        "power": 0.999999993739887,
+        "detect": 0.06,
+        "c1_seconds": 0.09997597063803784,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.0037224170123957416
+      }
+    },
+    {
+      "key": "same:aot",
+      "name": "same",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.011684231905121948,
+        "sigma1_ci": [
+          0.009434101607801861,
+          0.013988936005583178
+        ],
+        "sigma2": 0.00012629924928077803,
+        "sigma2_ci": [
+          0.0,
+          0.005271330275557199
+        ],
+        "sigma2_iid": 0.0024603026638194813,
+        "sigma2_drift": 0.0034042252348366556,
+        "k": 1.2197686499813738,
+        "k_ci": [
+          1.0200529320360476,
+          2.136072119822454
+        ],
+        "icc": 0.00011682894660233226,
+        "rho": 0.21387103742338917,
+        "rho_estimated": true,
+        "inflation": 1.4864334483109845,
+        "upstream_share": 0.06552046398237596,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.2,
+          "p_value": 0.7040000000000001,
+          "von_neumann": 1.6836980580928966,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 12,
+        "processes_per_version": 5,
+        "power": 0.9998067001699033,
+        "detect": 0.06,
+        "c1_seconds": 0.10015563699196273,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.005271330275557199
+      }
+    },
+    {
+      "key": "faster:aot",
+      "name": "faster",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.011009668794187202,
+        "sigma1_ci": [
+          0.009004572376116512,
+          0.013451918783535915
+        ],
+        "sigma2": 0.006007061377096676,
+        "sigma2_ci": [
+          0.0,
+          0.010735709234567835
+        ],
+        "sigma2_iid": 0.006557604240694563,
+        "sigma2_drift": 0.00615182241540668,
+        "k": 2.2803778107887616,
+        "k_ci": [
+          1.2668500303668182,
+          3.822820268655292
+        ],
+        "icc": 0.22940456761378528,
+        "rho": 0.2613315789284229,
+        "rho_estimated": true,
+        "inflation": 1.627749317855578,
+        "upstream_share": 0.3153828220537823,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.08571428571428573,
+          "p_value": 0.8717434402332361,
+          "von_neumann": 1.0335092356728948,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 0.8890209725539845,
+        "detect": 0.06,
+        "c1_seconds": 0.09138312850401811,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.010735709234567835
+      }
+    },
+    {
+      "key": "slower:aot",
+      "name": "slower",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.01085815991338809,
+        "sigma1_ci": [
+          0.00881283222869962,
+          0.01329394381943533
+        ],
+        "sigma2": 0.004742923999800418,
+        "sigma2_ci": [
+          0.0,
+          0.008933226631759031
+        ],
+        "sigma2_iid": 0.005373752074885126,
+        "sigma2_drift": 0.005482719617959059,
+        "k": 1.9710493736490133,
+        "k_ci": [
+          1.173114248618464,
+          3.2891911468370907
+        ],
+        "icc": 0.16022888074597483,
+        "rho": 0.2509250050896848,
+        "rho_estimated": true,
+        "inflation": 1.5954277570402378,
+        "upstream_share": 0.25364524814557066,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.028571428571428574,
+          "p_value": 0.9571545189504373,
+          "von_neumann": 1.1981874637999674,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 0.9576601010047013,
+        "detect": 0.06,
+        "c1_seconds": 0.10756701085427302,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.008933226631759031
+      }
+    },
+    {
+      "key": "small:aot",
+      "name": "small",
+      "side": "candidate",
+      "processes": 8,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.003636437195404489,
+        "sigma1_ci": [
+          0.0030768415073397686,
+          0.004214786564541136
+        ],
+        "sigma2": 0.0011391242561340305,
+        "sigma2_ci": [
+          0.0,
+          0.0020404038511654056
+        ],
+        "sigma2_iid": 0.0009986431102373223,
+        "sigma2_drift": 0.001388286619764982,
+        "k": 1.3884209667218137,
+        "k_ci": [
+          0.8204829674773536,
+          2.1373812802680674
+        ],
+        "icc": 0.08935879697859896,
+        "rho": -0.15555568670350656,
+        "rho_estimated": true,
+        "inflation": 0.7501847267699469,
+        "upstream_share": 0.06084462513571358,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.4285714285714286,
+          "p_value": 0.2894032248467902,
+          "von_neumann": 1.296445613673858,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 8,
+        "processes_per_version": 5,
+        "power": 1.0,
+        "detect": 0.06,
+        "c1_seconds": 0.09846333913722885,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.0020404038511654056
+      }
+    },
+    {
+      "key": "noisy:aot",
+      "name": "noisy",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009119239607077912,
+        "sigma1_ci": [
+          0.007555925272563067,
+          0.010682284019123196
+        ],
+        "sigma2": 0.03411483853165984,
+        "sigma2_ci": [
+          0.0137274724182836,
+          0.0540597479590947
+        ],
+        "sigma2_iid": 0.03413720224887726,
+        "sigma2_drift": 0.032342331417217964,
+        "k": 13.005404246652452,
+        "k_ci": [
+          5.341375890898689,
+          21.11094971570555
+        ],
+        "icc": 0.9333105997325308,
+        "rho": 0.10011421898548756,
+        "rho_estimated": true,
+        "inflation": 1.2018994170746673,
+        "upstream_share": 0.9380564975183703,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.08571428571428573,
+          "p_value": 0.8717434402332361,
+          "von_neumann": 0.8995046168017169,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 58,
+        "power": 0.8039241565843228,
+        "detect": 0.06,
+        "c1_seconds": 0.10214524338062395,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.0540597479590947
+      }
+    },
+    {
+      "key": "single:aot",
+      "name": "single",
+      "side": "candidate",
+      "processes": 1,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": null,
+      "design": null
+    },
+    {
+      "key": "unstable:aot",
+      "name": "unstable",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.00934171136330619,
+        "sigma1_ci": [
+          0.00773303332057665,
+          0.011060814101920391
+        ],
+        "sigma2": 0.005322935473425017,
+        "sigma2_ci": [
+          0.0,
+          0.009180234472476697
+        ],
+        "sigma2_iid": 0.005286719178406826,
+        "sigma2_drift": 0.005767158233293987,
+        "k": 2.201743071480702,
+        "k_ci": [
+          0.9814214708763578,
+          3.6693678466859283
+        ],
+        "icc": 0.24509813744841213,
+        "rho": -0.027068471788401993,
+        "rho_estimated": true,
+        "inflation": 0.9515665882052532,
+        "upstream_share": 0.23672591716172095,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.08571428571428573,
+          "p_value": 0.8717434402332361,
+          "von_neumann": 1.1397433345253154,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 5,
+        "power": 0.9549494435722607,
+        "detect": 0.06,
+        "c1_seconds": 0.09950911458512385,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.009180234472476697
+      }
+    },
+    {
+      "key": "drifting:aot",
+      "name": "drifting",
+      "side": "candidate",
+      "processes": 8,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.009408004320125002,
+        "sigma1_ci": [
+          0.007989057862173653,
+          0.010849067833310605
+        ],
+        "sigma2": 0.012907719812314249,
+        "sigma2_ci": [
+          0.005669791927895632,
+          0.020264380008693295
+        ],
+        "sigma2_iid": 0.012931784607220987,
+        "sigma2_drift": 0.0029681375247365706,
+        "k": 4.864737407803975,
+        "k_ci": [
+          2.296000613607535,
+          7.8400056986684685
+        ],
+        "icc": 0.6530627822698848,
+        "rho": 0.04059732205000848,
+        "rho_estimated": true,
+        "inflation": 1.0772794484048127,
+        "upstream_share": 0.6561538802792943,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": 0.9761904761904763,
+          "p_value": 3.3143960262000996e-05,
+          "von_neumann": 0.09599101773267307,
+          "detected": true
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 4,
+        "processes_per_version": 10,
+        "power": 0.8146267248261175,
+        "detect": 0.06,
+        "c1_seconds": 0.10136448138279032,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.020264380008693295
+      }
+    },
+    {
+      "key": "new:aot",
+      "name": "new",
+      "side": "candidate",
+      "processes": 6,
+      "trials_per_process": 12.0,
+      "is_stable": true,
+      "components": {
+        "sigma1": 0.01086006601922623,
+        "sigma1_ci": [
+          0.008953700699443403,
+          0.012983175173584025
+        ],
+        "sigma2": 0.0,
+        "sigma2_ci": [
+          0.0,
+          0.004109264370276192
+        ],
+        "sigma2_iid": 0.0,
+        "sigma2_drift": 0.0,
+        "k": 1.0779982547915332,
+        "k_ci": [
+          0.8934772420806029,
+          1.7368475619123638
+        ],
+        "icc": 0.0,
+        "rho": 0.08183561656011255,
+        "rho_estimated": true,
+        "inflation": 1.1620802373335914,
+        "upstream_share": 0.0,
+        "upstream_share_reported": null,
+        "drift": {
+          "spearman": -0.6,
+          "p_value": 0.208,
+          "von_neumann": 0.6118157995419807,
+          "detected": false
+        },
+        "outlier_processes": []
+      },
+      "design": {
+        "trials_per_process": 16,
+        "processes_per_version": 5,
+        "power": 0.9999999212297014,
+        "detect": 0.06,
+        "c1_seconds": 0.1000631124092386,
+        "c2_seconds_min": 2.0,
+        "sigma2_used": 0.004109264370276192
+      }
+    }
+  ]
+}
