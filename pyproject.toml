@@ -11,6 +11,7 @@ license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.0",
+    "pyyaml>=6.0",
     "scipy>=1.13",
 ]
 
@@ -25,3 +26,6 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# The end-to-end runner test builds Dart AOT binaries (about a minute); run it with `python -m pytest -m dart`.
+addopts = "-m 'not dart'"
+markers = ["dart: needs the Dart SDK and a bench_press clone next to this repository; slow"]

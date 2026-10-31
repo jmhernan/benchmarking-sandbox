@@ -147,7 +147,7 @@ def _diagnostic(
 
 def _input(run: Run) -> dict[str, Any]:
     env = run.environment
-    return {
+    out = {
         "file": run.path.name if run.path is not None else None,
         "timestamp": run.timestamp,
         "dart_version": env.get("dart_version") or env.get("dartVersion"),
@@ -155,6 +155,9 @@ def _input(run: Run) -> dict[str, Any]:
         "arch": env.get("arch"),
         "benchmarks": len(run.records),
     }
+    if run.meta:
+        out.update({k: run.meta.get(k) for k in ("ref", "commit", "compiler_flags", "aa", "run_id", "failed_processes")})
+    return out
 
 
 def build_report(
@@ -390,8 +393,21 @@ def render_markdown(report: dict[str, Any]) -> str:
     inputs = report["inputs"]
     out = ["# bench-stats report", ""]
     files = f"`{inputs['baseline']['file']}`"
-    if inputs["candidate"] is not None:
-        files += f" (baseline) vs `{inputs['candidate']['file']}` (candidate)"
+    base, cand = inputs["baseline"], inputs["candidate"]
+    if base.get("ref") is not None:
+
+        def version(v: dict[str, Any]) -> str:
+            flags = "".join(f" `{f}`" for f in v.get("compiler_flags") or [])
+            return f"`{v.get('ref')}` ({(v.get('commit') or '?')[:12]}){flags}"
+
+        files += f": baseline {version(base)} vs candidate {version(cand)}"
+        if base.get("aa"):
+            files += ", A/A (one binary under both labels)"
+        failed = (base.get("failed_processes") or 0) + (cand.get("failed_processes") or 0)
+        if failed:
+            files += f"; {failed} failed processes excluded"
+    elif cand is not None:
+        files += f" (baseline) vs `{cand['file']}` (candidate)"
     env = inputs["baseline"]
     dart = f"Dart {env['dart_version'].split()[0]}" if env["dart_version"] else "unknown Dart version"
     out += [

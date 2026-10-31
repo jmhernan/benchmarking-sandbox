@@ -1,0 +1,135 @@
+<<<BENCH_PRESS_JSON_START>>>
+{
+  "version": 1,
+  "timestamp": "2026-10-31T20:38:53.126223Z",
+  "environment": {
+    "dart_version": "3.13.7 (stable) (Thu Oct 22 14:28:57 2026 -0700) on \"macos_arm64\"",
+    "os": "macos",
+    "arch": "arm64",
+    "hostname": "Mac"
+  },
+  "benchmarks": [
+    {
+      "name": "baseline",
+      "target": "aot",
+      "mode": "sync",
+      "samples": 4,
+      "metrics": {
+        "mean_ns": 136808.50340136053,
+        "median_ns": 136990.47619047618,
+        "min_ns": 135998.6394557823,
+        "max_ns": 137254.42176870749,
+        "stddev_ns": 565.3072139394773,
+        "cv": 0.004132105825915024,
+        "mad_ns": 200.6802721088461,
+        "robust_cv": 0.0021718923804227197,
+        "iqr_ns": 520.0680272108584,
+        "is_robust_stable": true,
+        "p95_ns": 137235.44217687074,
+        "p99_ns": 137250.62585034015,
+        "ops_per_sec": 7309.487167374826,
+        "is_stable": true
+      },
+      "coordinates": {
+        "group": "Workload"
+      },
+      "is_baseline": true,
+      "raw_trials_ns": [
+        136853.0612244898,
+        137127.89115646257,
+        137254.42176870749,
+        135998.6394557823
+      ],
+      "warmup": {
+        "is_stable": true,
+        "total_iterations": 20,
+        "converged_at": 20,
+        "best_mmd": 0.15383722002257275,
+        "elapsed_seconds": 2.05452,
+        "estimated_op_ns": 136005.28401585206
+      },
+      "calibrated_batch_iterations": 735
+    },
+    {
+      "name": "identical_copy",
+      "target": "aot",
+      "mode": "sync",
+      "samples": 4,
+      "metrics": {
+        "mean_ns": 136450.20463847203,
+        "median_ns": 136388.81309686223,
+        "min_ns": 135922.23738062757,
+        "max_ns": 137100.95497953615,
+        "stddev_ns": 510.45195674876305,
+        "cv": 0.003740939473863138,
+        "mad_ns": 328.1036834925035,
+        "robust_cv": 0.0035666159863163797,
+        "iqr_ns": 579.1268758526712,
+        "is_robust_stable": true,
+        "p95_ns": 137022.5784447476,
+        "p99_ns": 137085.27967257844,
+        "ops_per_sec": 7328.680837449259,
+        "is_stable": true
+      },
+      "coordinates": {
+        "group": "Workload"
+      },
+      "raw_trials_ns": [
+        135922.23738062757,
+        137100.95497953615,
+        136578.44474761255,
+        136199.18144611188
+      ],
+      "warmup": {
+        "is_stable": true,
+        "total_iterations": 20,
+        "converged_at": 20,
+        "best_mmd": 0.19449664120024968,
+        "elapsed_seconds": 2.046042,
+        "estimated_op_ns": 136435.50531914894
+      },
+      "calibrated_batch_iterations": 733
+    },
+    {
+      "name": "spin",
+      "target": "aot",
+      "mode": "sync",
+      "samples": 4,
+      "metrics": {
+        "mean_ns": 143694.8424068768,
+        "median_ns": 143641.11747851002,
+        "min_ns": 143012.89398280802,
+        "max_ns": 144484.2406876791,
+        "stddev_ns": 790.051073740497,
+        "cv": 0.005498117124506395,
+        "mad_ns": 626.0744985673373,
+        "robust_cv": 0.006462063703415589,
+        "iqr_ns": 1303.724928366777,
+        "is_robust_stable": true,
+        "p95_ns": 144451.36103151864,
+        "p99_ns": 144477.664756447,
+        "ops_per_sec": 6959.192015872541,
+        "is_stable": true
+      },
+      "coordinates": {
+        "group": "Workload"
+      },
+      "raw_trials_ns": [
+        143017.19197707737,
+        143012.89398280802,
+        144484.2406876791,
+        144265.0429799427
+      ],
+      "warmup": {
+        "is_stable": true,
+        "total_iterations": 25,
+        "converged_at": 25,
+        "best_mmd": 0.08050551564877155,
+        "elapsed_seconds": 2.526013,
+        "estimated_op_ns": 143295.90395480226
+      },
+      "calibrated_batch_iterations": 698
+    }
+  ]
+}
+<<<BENCH_PRESS_JSON_END>>>

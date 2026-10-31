@@ -2,7 +2,7 @@
 
 Research toward a rigorous performance-benchmarking suite for a software engineering team (currently working in Dart). The goal is to tell, with quantified uncertainty, whether a code change made things faster or slower, by how much, and how sure we are.
 
-**Status: implementation started (Part A: A0 setup, A0c pilot, A2 analysis core, A3 report and A4 simulation validation done).** The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
+**Status: implementation started (Part A: A0 setup, A0c pilot, A1 git-ref runner, A2 analysis core, A3 report and A4 simulation validation done).** The project builds on [kevmoo/bench_press](https://github.com/kevmoo/bench_press) as the Dart runner (AOT target), and the work here is the statistical layer. The implementation plan is kept locally (`docs/plan.md`, git-ignored). It has two parts. **Part A** closes the statistical gaps identified in [docs/bench_press/](docs/bench_press). Much of it has now landed upstream in bench_press v0.4.2 (`5fd6396`): multi-process runs (`--processes`), process-level and paired Fieller intervals, a threshold/TOST gate (`--threshold`) and a between-process variance share, all opt-in. What remains here is git-ref rebuilds for `--diff`, better variance diagnostics, a design recommendation, multiple-comparison control, and validation in simulation and on real hardware. **Part B** then adds a Bayesian hierarchical estimator on top.
 
 ## Background
 
@@ -31,6 +31,27 @@ The Markdown report has three parts:
 
 `bench-stats analyze --help` lists the options: confidence level, per-process mean or median, FDR q, power and the effect to plan for.
 
+### Comparing two git refs in one session
+
+bench_press's `--diff` compares against a JSON stored in an earlier session, and drift between sessions makes that interval unreliable (A4). `bench-stats run` builds both refs and runs them interleaved in one session instead:
+
+```bash
+# Baseline main vs candidate feature, 10 processes each, in a seeded order balanced within pairs
+bench-stats run bench/benchmark/workload_benchmark.dart --baseline main --candidate feature -P 10 -o data/runs/feature.jsonl
+bench-stats analyze data/runs/feature.jsonl
+
+# Same commit, candidate built with a compile-time define (bench_press can't interleave builds that differ only in -D)
+bench-stats run bench/benchmark/workload_benchmark.dart --baseline HEAD --candidate HEAD \
+  --candidate-flag=-DBENCH_SPIN=4800 -P 10 -o data/runs/spin.jsonl
+
+# A/A: one binary launched under both labels
+bench-stats run bench/benchmark/workload_benchmark.dart --baseline HEAD --aa -P 20 -o data/runs/aa.jsonl
+```
+
+The package is the nearest `pubspec.yaml` above the benchmark file. Each ref is checked out in its own git worktree (in a temporary directory, or under `--work-dir` to keep it), then built with `dart pub get` and `dart compile exe`, as bench_press does for `-t aot`. Relative path dependencies that leave the repository, such as `../../bench_press`, are pinned to where they point from the main checkout through a `pubspec_overrides.yaml` in the worktree. Only committed code is measured.
+
+The output is JSONL with one header line, holding the refs, commits, compiler flags, binary hashes, launch order and machine environment, then one line per process. Each process line holds that process's bench_press JSON, launch timestamps, power source and macOS thermal limits. It keeps the per-process stability that bench_press loses when it merges processes. Failed processes are recorded and excluded by `analyze`. Other options: `--trials`, `--seed`, `--cooldown` between launches, `--timeout` per process, and `--compiler-flag` for both versions.
+
 ## Repository layout
 
 | Path | Contents |
@@ -46,10 +67,10 @@ The Markdown report has three parts:
 | [sandbox/synth.py](sandbox/synth.py) | Synthetic data generator with known ground truth, for validating detectors and estimators. |
 | `sandbox/output/` | Tables (CSV), plots (PNG) and `results.txt` from `analyze.py`. |
 | [sandbox/spikes/](sandbox/spikes) | Throwaway feasibility checks (e.g. the Bayesian grid estimator spike cited in the local plan, `docs/plan.md` §B.2a). |
-| [pyproject.toml](pyproject.toml), [src/bench_stats/](src/bench_stats), [tests/](tests) | The `bench_stats` Python package (the statistical layer) and its pytest suite. Part A's analysis core (A2) is in place: it loads bench_press run JSON ([io.py](src/bench_stats/io.py)) and compares versions ([compare.py](src/bench_stats/compare.py)) with process-level Fieller, the δ gate, variance components that allow for autocorrelation and drift, design recommendations and Benjamini–Hochberg (all in [stats/](src/bench_stats/stats)), and reports the results as Markdown or JSON ([report.py](src/bench_stats/report.py), CLI `bench-stats analyze`). It also holds exact ports of bench_press's own interval and verdict rules, checked against golden fixtures generated from bench_press `5fd6396` ([tests/fixtures/](tests/fixtures)). Install with `pip install -e ".[dev]"` (into the `perfBench` conda environment), run tests with `python -m pytest`. |
+| [pyproject.toml](pyproject.toml), [src/bench_stats/](src/bench_stats), [tests/](tests) | The `bench_stats` Python package (the statistical layer) and its pytest suite. Part A's analysis core (A2) is in place: it loads bench_press run JSON ([io.py](src/bench_stats/io.py)) and compares versions ([compare.py](src/bench_stats/compare.py)) with process-level Fieller, the δ gate, variance components that allow for autocorrelation and drift, design recommendations and Benjamini–Hochberg (all in [stats/](src/bench_stats/stats)), and reports the results as Markdown or JSON ([report.py](src/bench_stats/report.py), CLI `bench-stats analyze`). The git-ref runner (A1, [runner.py](src/bench_stats/runner.py), CLI `bench-stats run`) builds two refs in worktrees and runs them interleaved. It also holds exact ports of bench_press's own interval and verdict rules, checked against golden fixtures generated from bench_press `5fd6396` ([tests/fixtures/](tests/fixtures)). Install with `pip install -e ".[dev]"` (into the `perfBench` conda environment), run tests with `python -m pytest`; the end-to-end runner test builds Dart binaries and is opt-in with `python -m pytest -m dart`. |
 | [src/bench_stats/validate/](src/bench_stats/validate) | The A4 simulation validation: a generator with known truth (normal model plus robustness scenarios), experiments run through the shipped estimators, and a summary that checks the plan's acceptance criteria. `python -m bench_stats.validate` (about 1 minute on 16 cores; `--quick` for a smoke test). Results: [sandbox/output/a4/summary.md](sandbox/output/a4/summary.md). |
 | [bench/](bench) | Controlled Dart benchmarks (a fixed workload with an injectable, calibrated spin cost, plus a same-binary group) for pilots and real-hardware validation. Needs a bench_press clone next to this repository; see [bench/README.md](bench/README.md). |
-| `data/runs/` | Raw bench_press run JSON. Git-ignored. |
+| `data/runs/` | Raw bench_press run JSON and `bench-stats run` JSONL. Git-ignored. |
 
 ## What the research has found so far
 

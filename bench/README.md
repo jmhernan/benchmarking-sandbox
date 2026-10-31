@@ -39,7 +39,13 @@ dart run bench_press run -t aot --processes 3 --threshold 0.03 --no-save benchma
 bench-stats analyze data/runs/<name>.json
 ```
 
-Builds with different `-D` values write to the same artifact path (`.dart_tool/bench_press/build/aot/`), so run them one after another, not in one interleaved session.
+Builds with different `-D` values write to the same artifact path (`.dart_tool/bench_press/build/aot/`), so with bench_press run them one after another, not in one interleaved session. `bench-stats run` builds each version into its own directory and can interleave them; see the "Comparing two git refs" section of the [top-level README](../README.md):
+
+```bash
+# From the repository root: baseline vs known-effect candidate, interleaved in one session
+bench-stats run bench/benchmark/workload_benchmark.dart --baseline HEAD --candidate HEAD \
+  --candidate-flag=-DBENCH_SPIN=4800 -P 10 -o data/runs/<name>.jsonl
+```
 
 ## Calibrating the spin cost
 
