@@ -1,0 +1,51 @@
+<<<BENCH_PRESS_JSON_START>>>
+{
+  "version": 1,
+  "timestamp": "2026-10-31T20:38:43.101419Z",
+  "environment": {
+    "dart_version": "3.13.7 (stable) (Thu Oct 22 14:28:57 2026 -0700) on \"macos_arm64\"",
+    "os": "macos",
+    "arch": "arm64",
+    "hostname": "Mac"
+  },
+  "benchmarks": [
+    {
+      "name": "workload",
+      "target": "aot",
+      "mode": "sync",
+      "samples": 4,
+      "metrics": {
+        "mean_ns": 132694.40745672438,
+        "median_ns": 132693.741677763,
+        "min_ns": 132467.37683089214,
+        "max_ns": 132922.76964047935,
+        "stddev_ns": 208.59326970683026,
+        "cv": 0.0015719823744256801,
+        "mad_ns": 171.10519307591312,
+        "robust_cv": 0.0019117748587600565,
+        "iqr_ns": 287.61651131822146,
+        "is_robust_stable": true,
+        "p95_ns": 132905.79227696403,
+        "p99_ns": 132919.3741677763,
+        "ops_per_sec": 7536.112630263863,
+        "is_stable": true
+      },
+      "raw_trials_ns": [
+        132467.37683089214,
+        132577.89613848203,
+        132922.76964047935,
+        132809.58721704394
+      ],
+      "warmup": {
+        "is_stable": true,
+        "total_iterations": 20,
+        "converged_at": 20,
+        "best_mmd": 0.0,
+        "elapsed_seconds": 1.304866,
+        "estimated_op_ns": 133222.22222222222
+      },
+      "calibrated_batch_iterations": 751
+    }
+  ]
+}
+<<<BENCH_PRESS_JSON_END>>>

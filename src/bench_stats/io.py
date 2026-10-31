@@ -1,4 +1,5 @@
-"""Load bench_press run JSON (`bench_press run -o …`, schema version 1, bench_press 5fd6396)."""
+"""Load bench_press run JSON (`bench_press run -o …`, schema version 1, bench_press 5fd6396) and
+`bench-stats run` files (JSONL: a header, then one record per process holding that process's bench_press JSON)."""
 
 import json
 from dataclasses import dataclass, field
@@ -8,6 +9,10 @@ from typing import Any, Literal
 import numpy as np
 
 Reduce = Literal["mean", "median"]
+
+RUNNER_SCHEMA = "bench-stats-run"
+RUNNER_SCHEMA_VERSION = 1
+RUNNER_LABELS = ("baseline", "candidate")
 
 
 @dataclass(frozen=True)
@@ -80,6 +85,7 @@ class Run:
     timestamp: str
     environment: dict[str, Any]
     records: tuple[BenchmarkRecord, ...]
+    meta: dict[str, Any] = field(default_factory=dict)
 
     def by_key(self) -> dict[str, BenchmarkRecord]:
         return {r.key: r for r in self.records}
@@ -127,3 +133,104 @@ def load_run(path: str | Path) -> Run:
         environment=dict(data.get("environment") or {}),
         records=tuple(_record(b) for b in data["benchmarks"]),
     )
+
+
+def is_runner_file(path: str | Path) -> bool:
+    """True if `path` starts with a `bench-stats run` header line."""
+    with Path(path).open(encoding="utf-8") as f:
+        first = f.readline()
+    try:
+        header = json.loads(first)
+    except ValueError:
+        return False
+    return isinstance(header, dict) and header.get("schema") == RUNNER_SCHEMA
+
+
+def _process_stable(entry: dict[str, Any]) -> bool:
+    warmup = entry.get("warmup") or {}
+    return bool(entry["metrics"].get("is_stable", True)) and bool(warmup.get("is_stable", True))
+
+
+def _record_from_processes(entries: list[dict[str, Any]]) -> BenchmarkRecord:
+    """Merge one benchmark's per-process entries, as bench_press's `BenchmarkEntry.fromProcesses` does,
+    but keep which processes were unstable."""
+    first = entries[0]
+    trials = tuple(
+        np.asarray(e["raw_trials_ns"], float) if e.get("raw_trials_ns") else np.array([float(e["metrics"]["mean_ns"])])
+        for e in entries
+    )
+    P = len(trials)
+    means = tuple(float(t.mean()) for t in trials)
+    warmups = [e.get("warmup") for e in entries]
+    present = [w for w in warmups if w]
+    warmup_stable = all(bool(w.get("is_stable", True)) for w in present) if present else None
+    unstable = [i for i, e in enumerate(entries) if not _process_stable(e)]
+    warmup: dict[str, Any] = {"unstable_processes": unstable}
+    if present:
+        warmup.update(
+            is_stable=warmup_stable,
+            total_iterations=sum(int(w.get("total_iterations", 0)) for w in present),
+            elapsed_seconds=sum(float(w.get("elapsed_seconds", 0.0)) for w in present),
+        )
+    return BenchmarkRecord(
+        name=first["name"],
+        target=first["target"],
+        coordinates=dict(first.get("coordinates") or {}),
+        is_baseline=bool(first.get("is_baseline", False)),
+        process_trials=trials,
+        process_means_ns=means if P > 1 else (),
+        raw_trials_ns=tuple(float(x) for t in trials for x in t),
+        is_stable=not unstable,
+        warmup_stable=warmup_stable,
+        mean_ns=float(np.mean(means)) if P > 1 else float(first["metrics"]["mean_ns"]),
+        calibrated_batch_iterations=first.get("calibrated_batch_iterations"),
+        warmup=warmup,
+    )
+
+
+def load_runner_file(path: str | Path) -> tuple[Run, Run]:
+    """Read a `bench-stats run` JSONL file into (baseline, candidate) runs.
+
+    Failed processes are skipped (their count is in `Run.meta["failed_processes"]`), the rest are taken in
+    launch order. A file cut short by an interrupted run loads with the processes it has."""
+    path = Path(path)
+    lines = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines or lines[0].get("schema") != RUNNER_SCHEMA:
+        raise ValueError(f"{path}: not a bench-stats run file")
+    header = lines[0]
+    if header.get("schema_version") != RUNNER_SCHEMA_VERSION:
+        raise ValueError(f"{path}: unsupported bench-stats run schema version {header.get('schema_version')}")
+    processes = sorted((r for r in lines[1:] if r.get("type") == "process"), key=lambda r: r["launch_order"])
+
+    runs = []
+    for label in RUNNER_LABELS:
+        mine = [r for r in processes if r["version"] == label]
+        ok = [r for r in mine if r.get("suite") is not None and r.get("error") is None]
+        if not ok:
+            raise ValueError(f"{path}: no successful {label} processes")
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for r in ok:
+            for b in r["suite"]["benchmarks"]:
+                coords = b.get("coordinates") or {}
+                key = ":".join([b["name"], b["target"]] + ([",".join(f"{k}={v}" for k, v in sorted(coords.items()))] if coords else []))
+                grouped.setdefault(key, []).append(b)
+        version = header["versions"][label]
+        runs.append(
+            Run(
+                path=path,
+                version=int(ok[0]["suite"].get("version", 1)),
+                timestamp=header.get("created", ""),
+                environment=dict(ok[0]["suite"].get("environment") or {}),
+                records=tuple(_record_from_processes(entries) for entries in grouped.values()),
+                meta={
+                    "label": label,
+                    "ref": version.get("ref"),
+                    "commit": version.get("commit"),
+                    "compiler_flags": list(version.get("compiler_flags") or []),
+                    "aa": bool(header.get("aa")),
+                    "run_id": header.get("run_id"),
+                    "failed_processes": len(mine) - len(ok),
+                },
+            )
+        )
+    return runs[0], runs[1]
